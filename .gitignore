@@ -1,0 +1,11 @@
+#### External packages ####
+client/node_modules
+node_modules
+
+#### Dist directiories ####
+client/dist
+dist
+
+#### IDE ####
+.vscode/*
+.DS_Store
