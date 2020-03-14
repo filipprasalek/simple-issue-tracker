@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const issueService = require.main.require('./services/issuesService');
 const {
   createIssueRQValidator,
   updateIssueStateRQValidator
@@ -13,7 +14,12 @@ router.get('/:issueId', async (_, res) => {
 })
 
 router.post('/', createIssueRQValidator, async (req, res) => {
-  res.json(req.body);
+  try {
+    const issueId = await issueService.create(req.body);
+    res.status(201).location(`${req.originalUrl}/${issueId}`).send();
+  } catch(err) {
+    res.status(500).json({ error: 'Error while creating issue: ' + err });
+  }
 });
 
 router.put('/:issueId/state', updateIssueStateRQValidator, async (req, res) => {
