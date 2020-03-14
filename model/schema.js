@@ -6,7 +6,7 @@ const createIssueRQ = Joi.object({
 });
 
 const updateIssueStateRQ = Joi.object({
-  state: Joi.string().valid('PENDING', 'CLOSED')
+  state: Joi.string().insensitive().valid('PENDING', 'CLOSED').required()
 });
 
 module.exports = {
