@@ -13,10 +13,13 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   },
   issuesList: {
+    minHeight: '80vh',
     paddingLeft: theme.spacing(1),
-    overflowY: 'auto'
+    overflowY: 'auto',
+    height: '100%'
   },
   issueDetails: {
+    minHeight: '80vh',
     paddingRight: theme.spacing(1),
     height: '100%',
   },
@@ -48,7 +51,7 @@ function Dashboard() {
     <IssueDetails 
       onStateChange={(issueId, state) => updateIssueState(issueId, getNextIssueState(state), 
         () => {setIssues(issues.map(issue => issue.id === activeIssue ? {...issue, state: getNextIssueState(state)} : issue))}, 
-        () => {}
+        (error) => {setError(error.message)}
       )} 
       issue={issues.find(it => it.id === activeIssue)}
     />

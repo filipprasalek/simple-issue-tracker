@@ -28,6 +28,13 @@ const useStyles = makeStyles(theme => ({
   body: {
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4)
+  },
+  emptyIssueMessage: {
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
   }
 }));
 
@@ -51,6 +58,14 @@ function IssueDetails(props) {
     }
   }, [props.issue]);
 
+  const renderEmptyIssue = useCallback(() => (
+    <Box className={`${classes.wrapper} ${classes.emptyIssueMessage}`} component="div">
+      <Typography align='center' variant="subtitle1">
+        Choose issue to view it's details
+      </Typography>
+    </Box>
+  ), []);
+
   const renderIssueDetails = useCallback(() => {
     return (
       <Box className={classes.wrapper} component="div">
@@ -71,7 +86,7 @@ function IssueDetails(props) {
 
   return (
     <Paper className={classes.root}>
-        {props.issue && renderIssueDetails()}
+        {props.issue ? renderIssueDetails() : renderEmptyIssue()}
     </Paper>
   );
 }
