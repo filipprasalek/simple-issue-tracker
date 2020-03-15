@@ -1,29 +1,39 @@
 const router = require('express').Router();
-const issueService = require.main.require('./services/issuesService');
+const IssuesService = require.main.require('./services/IssuesService');
+const {IssueNotFoundError, InvalidIssueStateError} = require.main.require('./model/errors');
 const validation = require.main.require('./utils/validation');
 
 router.get('/', (_, res, next) => {
-  issueService.getAll()
+  IssuesService.getAll()
     .then(issues => res.json(issues))
     .catch(error => next(error));
 });
 
 router.post('/', validation.createIssueRQValidator, (req, res, next) => {
-  issueService.create(req.body)
-    .then(issueId => res.status(201).location(`${req.originalUrl}/${issueId}`).send())
+  IssuesService.create(req.body)
+    .then(issueId => res.location(`${req.originalUrl}/${issueId}`).status(201).send())
     .catch(error => next(error));
 });
 
 router.get('/:issueId', (req, res, next) => {
-  issueService.get(req.params.issueId)
+  IssuesService.get(req.params.issueId)
     .then(issue => res.json(issue))
     .catch(error => next(error));
-})
+});
 
 router.put('/:issueId/state', validation.updateIssueStateRQValidator, (req, res, next) => {
-  issueService.updateState(req.params.issueId, req.body)
+  IssuesService.updateState(req.params.issueId, req.body)
     .then(() => res.sendStatus(200))
     .catch(error => next(error));
+});
+
+router.use((err, _, res, next) => {
+  if (err instanceof IssueNotFoundError) {
+    return res.status(404).json({error: err.toString()});
+  } else if (err instanceof InvalidIssueStateError) {
+    return res.status(400).json({error: err.toString()});
+  }
+  next(err);
 });
 
 module.exports = router;

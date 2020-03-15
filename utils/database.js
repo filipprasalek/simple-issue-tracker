@@ -6,5 +6,5 @@ if (!inMemoryDB.getCollection('issues')) {
 }
 
 module.exports = {
-  issuesRepository: inMemoryDB.getCollection('issues')
+  IssuesRepository: inMemoryDB.getCollection('issues')
 };

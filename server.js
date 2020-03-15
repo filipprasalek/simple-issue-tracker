@@ -12,7 +12,7 @@ app.get('/', (_, res) => {
 });
 
 app.use((err, _, res, __) => {
-  res.status(500).json({error: err.message});
+  res.status(500).json({error: `Unexpected error - ${err}`});
 })
 
 app.listen(3000, () => console.log('Server is listening...'));
