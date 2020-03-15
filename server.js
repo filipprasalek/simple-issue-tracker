@@ -1,10 +1,12 @@
 const express = require('express');
+const cors = require('cors');
 const { httpLogger, logger } = require('./utils/logger');
 const prepareErrorResponseBody = require('./model/errors').prepareErrorResponseBody;
 
 const app = express();
 
-app.use(httpLogger)
+app.use(cors());
+app.use(httpLogger);
 app.use(express.json())
 
 const issuesRoute = require('./api/issues');
