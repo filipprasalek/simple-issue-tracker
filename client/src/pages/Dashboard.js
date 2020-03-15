@@ -1,16 +1,27 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import {Grid, Paper} from '@material-ui/core';
+import {Grid, Box} from '@material-ui/core';
 import {makeStyles} from '@material-ui/styles';
 import Toolbar from 'components/Toolbar';
-import {fetchJSON} from 'utils/fetchUtils';
+import {fetchAllIssues, updateIssueState} from 'lib/apiRequests';
+import IssuesList from 'components/IssuesList';
+import IssueDetails from 'components/IssueDetails';
+import {getNextIssueState} from 'utils/dictionary';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
+  },
+  issuesList: {
+    paddingLeft: theme.spacing(1),
+    overflowY: 'auto'
+  },
+  issueDetails: {
+    paddingRight: theme.spacing(1),
+    height: '100%',
   },
   paper: {
     padding: theme.spacing(2),
-    textAlign: 'center',
     color: theme.palette.text.secondary,
   }
 }));
@@ -18,35 +29,44 @@ const useStyles = makeStyles(theme => ({
 function Dashboard() {
   const classes = useStyles();
   const [issues, setIssues] = useState([]);
-  const [activeIssue, setActiveIssue] = useState(0);
+  const [activeIssue, setActiveIssue] = useState('');
   const [error, setError] = useState(null);
   
   useEffect(() => {
-    fetchJSON('http://localhost:3000/api/v1/issues', {}, 
-      setIssues, 
-      error => {setError(error.message)}
-    );
-  }, [])
+    fetchAllIssues(setIssues, error => {setError(error.message)});
+  }, []);
 
-  const renderIssuesList = useCallback(() => {
-    return (<Paper className={classes.paper}>
-      { issues.map(it => <span>{ it.title }</span>) }
-    </Paper>);
-  }, [issues, activeIssue])
+  const renderIssuesList = useCallback(() => (
+    <IssuesList 
+      onClick={setActiveIssue} 
+      activeIssue={activeIssue} 
+      issues={issues}
+    />
+  ), [issues, activeIssue]);
 
-  const renderActiveIssue = useCallback(() => {
-    return <Paper className={classes.paper}>test</Paper>;
-  }, [activeIssue])
+  const renderActiveIssue = useCallback(() => (
+    <IssueDetails 
+      onStateChange={(issueId, state) => updateIssueState(issueId, getNextIssueState(state), 
+        () => {setIssues(issues.map(issue => issue.id === activeIssue ? {...issue, state: getNextIssueState(state)} : issue))}, 
+        () => {}
+      )} 
+      issue={issues.find(it => it.id === activeIssue)}
+    />
+  ), [issues, activeIssue]);
 
   return (
     <div className={classes.root}>
       <Toolbar/>
       <Grid container spacing={1}>
         <Grid item xs={4}>
-          {renderIssuesList()}
+          <Box className={classes.issuesList} component="div">
+            {renderIssuesList()}
+          </Box>
         </Grid>
         <Grid item xs={8}>
-          <Paper className={classes.paper}>details container</Paper>
+          <Box className={classes.issueDetails} component="div">
+            {renderActiveIssue()}
+          </Box>
         </Grid>
       </Grid>
     </div>

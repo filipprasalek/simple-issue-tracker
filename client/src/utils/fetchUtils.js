@@ -5,7 +5,7 @@ function fetchJSON(URL, settings = {}, successCallback = () => {}, failureCallba
   }
   return fetch(URL, {...settings, headers: {...commonHeaders, ...settings.headers}})
     .then(checkStatus)
-    .then(response => response.json())
+    .then(parseResponseBody)
     .then(successCallback)
     .catch(failureCallback);
 }
@@ -16,6 +16,15 @@ async function checkStatus(response) {
     throw new Error(errorResponse.error);
   }
   return Promise.resolve(response);
+}
+
+async function parseResponseBody(response) {
+  const responseBody = await response.text();
+  try {
+    return Promise.resolve(JSON.parse(responseBody));
+  } catch {
+    return Promise.resolve(response);
+  }
 }
 
 function getServerUrl() {
