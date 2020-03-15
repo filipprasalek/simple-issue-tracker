@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const IssuesService = require.main.require('./services/IssuesService');
-const {IssueNotFoundError, InvalidIssueStateError} = require.main.require('./model/errors');
+const {IssueNotFoundError, InvalidIssueStateError, prepareErrorResponseBody} = require.main.require('./model/errors');
 const validation = require.main.require('./utils/validation');
 
 router.get('/', (_, res, next) => {
@@ -29,9 +29,9 @@ router.put('/:issueId/state', validation.updateIssueStateRQValidator, (req, res,
 
 router.use((err, _, res, next) => {
   if (err instanceof IssueNotFoundError) {
-    return res.status(404).json({error: err.toString()});
+    return res.status(404).json(prepareErrorResponseBody(err.toString()));
   } else if (err instanceof InvalidIssueStateError) {
-    return res.status(400).json({error: err.toString()});
+    return res.status(400).json(prepareErrorResponseBody(err.toString()));
   }
   next(err);
 });
