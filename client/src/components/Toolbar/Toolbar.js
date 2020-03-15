@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function IssuesToolbar() {
+function IssuesToolbar(props) {
   const classes = useStyles();
   return(
     <div className={classes.toolbar}>
@@ -33,7 +33,7 @@ function IssuesToolbar() {
             Issue Tracker
           </Typography>
           <span className={classes.grow} />
-          <Button color="inherit">
+          <Button onClick={props.onCreateIssueClick} color="inherit">
             Create new issue 
             <AddIcon className={classes.addIcon}/>
           </Button>
@@ -44,3 +44,7 @@ function IssuesToolbar() {
 }
 
 export default IssuesToolbar;
+
+IssuesToolbar.propTypes = {
+  onCreateIssueClick: PropTypes.func.isRequired
+}

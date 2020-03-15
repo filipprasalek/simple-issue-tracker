@@ -44,15 +44,17 @@ function IssuesList(props) {
   }, []);
 
   const renderEmptyListMessage = useCallback(() => (
-    <Box className={classes.emptyIssueMessage} component="div">
-      <Typography align='center' variant="subtitle1">
-        No issues found
-      </Typography>
-    </Box>
+    <Paper elevation={3} className={classes.root}>
+      <Box className={classes.emptyIssueMessage} component="div">
+        <Typography align='center' variant="subtitle1">
+          No issues found
+        </Typography>
+      </Box>
+    </Paper>
   ), []);
 
   const renderIssueList = useCallback(() => (
-    <List className={classes.list}>
+    <List className={`${classes.list} ${classes.root}`}>
       { props.issues.map(issue => (
         <div key={issue.id}>
           <ListItem button selected={props.activeIssue === issue.id} onClick={() => props.onClick(issue.id)} >
@@ -67,13 +69,9 @@ function IssuesList(props) {
         </div>
       ))}
     </List>
-  ), [props.issues]);
+  ), [props.issues, props.activeIssue]);
 
-  return (
-    <Paper elevation={3} className={classes.root}>
-      {(props.issues && props.issues.length !== 0) ? renderIssueList() : renderEmptyListMessage()}
-    </Paper>
-  );
+  return (props.issues && props.issues.length !== 0) ? renderIssueList() : renderEmptyListMessage();
 }
 
 export default IssuesList;

@@ -12,7 +12,7 @@ const IssuesService = {
     return IssuesMapper.mapIssueDBEntityToDTO(issue);
   },
 
-  getAll: async () => IssuesRepository.find().map(IssuesMapper.mapIssueDBEntityToDTO),
+  getAll: async () => IssuesRepository.find().map(IssuesMapper.mapIssueDBEntityToDTO).reverse(),
 
   create: async createIssueRQ => {
     const issue = IssuesRepository.insert(IssuesMapper.mapCreateIssueRQToDBEntity(createIssueRQ));

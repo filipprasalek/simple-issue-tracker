@@ -4,7 +4,7 @@ const IssueState = require.main.require('./utils/dictionary').IssueState;
 const createIssueRQ = Joi.object({
   title: Joi.string()
     .min(6)
-    .max(30)
+    .max(60)
     .required(),
   description: Joi.string()
     .required()

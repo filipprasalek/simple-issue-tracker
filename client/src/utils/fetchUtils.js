@@ -12,7 +12,7 @@ function fetchJSON(URL, settings = {}, successCallback = () => {}, failureCallba
 
 async function checkStatus(response) {
   if (!response.ok) {
-    const errorResponse = await response.json()
+    const errorResponse = await response.json();
     throw new Error(errorResponse.error);
   }
   return Promise.resolve(response);
