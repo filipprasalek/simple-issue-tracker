@@ -67,7 +67,7 @@ function IssuesList(props) {
         </div>
       ))}
     </List>
-  ), []);
+  ), [props.issues]);
 
   return (
     <Paper elevation={3} className={classes.root}>
