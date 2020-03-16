@@ -1,7 +1,10 @@
 const router = require('express').Router();
-const IssuesService = require.main.require('./services/IssuesService');
+const issuesService = require.main.require('./services/IssuesService');
+const IssuesRepository = require.main.require('./utils/database').IssuesRepository;
 const {IssueNotFoundError, InvalidIssueStateError, prepareErrorResponseBody} = require.main.require('./model/errors');
 const validation = require.main.require('./utils/validation');
+
+const IssuesService = issuesService(IssuesRepository);
 
 router.get('/', (_, res, next) => {
   IssuesService.getAll()
